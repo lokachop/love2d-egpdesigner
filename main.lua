@@ -9,7 +9,7 @@ function love.load() -- called on start
 	CurrBrightness = 1
 	CurrSaturation = 1
 
-	background = love.graphics.newImage("res/swedishpfp.png")
+	background = love.graphics.newImage("res/background.png")
 	DoTransparency = false
 
 	initEGPDrawerGUI()
