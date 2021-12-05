@@ -1,11 +1,15 @@
 this requires love2d (https://love2d.org/)
-
-replace background.png (in egpdesigner/res folder) to change the background while drawing (has to be 512 x 512)
-this tool was made by lokachop
-contact Lokachop#5862 if you have any issues, enjoy!
+# love2d-egpdesigner
+## a helper program that allows you to draw polygons and export to [wiremod](https://github.com/wiremod/wire) EGP code
+ 
+ 
+ replace background.png (in egpdesigner/res folder) to change the background while drawing (has to be 512 x 512)
+ this tool was made by lokachop
+ contact Lokachop#5862 if you have any issues, enjoy!
 
 
 CONTROLS:
+
 	space; toggle drawmode
 	w; advance 1 object forward
 	s; advance 1 object backwards (make sure to not be on object 0 or less than 0)
