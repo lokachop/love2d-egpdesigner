@@ -1,8 +1,9 @@
 local function makeHSV2RGBCanvas()
-	--if (rgbcanvas == nil) then
-		local w, h = love.graphics.getDimensions()
-
+	local w, h = love.graphics.getDimensions()
+	if (rgbcanvas == nil) then
 		rgbcanvas = love.graphics.newCanvas(w, 32)
+	end
+
 		love.graphics.setCanvas(rgbcanvas)
 			for i = 0, w do
 				local calci = ((i/w) * 360) / 360
@@ -11,15 +12,16 @@ local function makeHSV2RGBCanvas()
 				love.graphics.rectangle("fill", i, 0, (w/360), 32)
 			end
 		love.graphics.setCanvas()
-	--end
+	
 	return rgbcanvas
 end
 
 local function makeBrightnessCanvas()
-	--if (brightnesscanvas == nil) then
-		local w, h = love.graphics.getDimensions()
-
+	local w, h = love.graphics.getDimensions()
+	if (brightnesscanvas == nil) then
 		brightnesscanvas = love.graphics.newCanvas(w, 32)
+	end
+
 		love.graphics.setCanvas(brightnesscanvas)
 			for i = 0, w do
 				local calci = ((i/w) * 360) / 360
@@ -28,15 +30,16 @@ local function makeBrightnessCanvas()
 				love.graphics.rectangle("fill", i, 0, (w/360), 32)
 			end
 		love.graphics.setCanvas()
-	--end
+	
 	return brightnesscanvas
 end
 
 local function makeSaturationCanvas()
-	--if (saturationcanvas == nil) then
-		local w, h = love.graphics.getDimensions()
-
+	local w, h = love.graphics.getDimensions()
+	if (saturationcanvas == nil) then
 		saturationcanvas = love.graphics.newCanvas(w, 32)
+	end
+		
 		love.graphics.setCanvas(saturationcanvas)
 			for i = 0, w do
 				local calci = ((i/w) * 360) / 360
@@ -45,7 +48,7 @@ local function makeSaturationCanvas()
 				love.graphics.rectangle("fill", i, 0, (w/360), 32)
 			end
 		love.graphics.setCanvas()
-	--end
+
 	return saturationcanvas
 end
 
