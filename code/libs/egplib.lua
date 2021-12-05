@@ -191,7 +191,7 @@ function egplib.renderDrawingData(x, y)
 	end
 
 	love.graphics.print("EGPObjects: "..tostring(tricount), x, y + 16)
-
+	love.graphics.print("TotalObjects: "..tostring(objcount + tricount), x, y + (16 * 2))
 end
 
 
@@ -206,6 +206,7 @@ end
 
 local function polyDrawAddPoint(x, y)
 	local fpos = screenToTranslatedMouse({x, y})
+	addNotification(fpos[1], 4)
 
 	egplib.addPolyPoint(egplib.CurrDrawData.id, fpos)
 	addNotification("add point", 2)
@@ -375,12 +376,13 @@ local function exportPoly(poly, currID)
 	local IDAddCount = 0
 	local tabltotriangulate = {}
 
-	local offx = DrawOffset[1]
-	local offy = DrawOffset[2]
+	local offx = 0--DrawOffset[1]
+	local offy = 0--DrawOffset[2]
 
 	for k, v in pairs(egplib.getPolyData(poly.id)) do
 		tabltotriangulate[#tabltotriangulate + 1] = v[1]
 		tabltotriangulate[#tabltotriangulate + 1] = v[2]
+
 	end
 
 	local tris = love.math.triangulate(tabltotriangulate)

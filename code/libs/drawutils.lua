@@ -28,13 +28,13 @@ function screenToTranslated(vec)
 	transform:translate(w / 2, h / 2)
 	transform:scale(ImageScale)
 	transform:translate(-w / 2, -h / 2)
-	transform:translate(DrawOffset[1] - 256, DrawOffset[2])
+	transform:translate(DrawOffset[1], DrawOffset[2])
 	local fx, fy = transform:transformPoint(vec[1], vec[2])
 	return {fx, fy}
 end
 
 function screenToTranslatedMouse(vec)
-	local fx = vec[1] - (DrawOffset[1] - 256)
+	local fx = vec[1] - (DrawOffset[1])
 	local fy = vec[2] - DrawOffset[2]
 
 	return {fx, fy}
@@ -60,7 +60,7 @@ function renderEGPPolyFull(polydata)
 		tabltorender[#tabltorender + 1] = (fpos[1])
 		tabltorender[#tabltorender + 1] = (fpos[2])
 	end
-	
+
 	local tris = love.math.triangulate(tabltorender)
 
 	for k, v in pairs(tris) do
