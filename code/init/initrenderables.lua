@@ -4,14 +4,14 @@ local function makeHSV2RGBCanvas()
 		rgbcanvas = love.graphics.newCanvas(w, 32)
 	end
 
-		love.graphics.setCanvas(rgbcanvas)
-			for i = 0, w do
-				local calci = ((i/w) * 360) / 360
-				local r, g, b = hsvToRGB(calci, CurrSaturation, CurrBrightness)
-				love.graphics.setColor(r, g, b)
-				love.graphics.rectangle("fill", i, 0, (w/360), 32)
-			end
-		love.graphics.setCanvas()
+	love.graphics.setCanvas(rgbcanvas)
+		for i = 0, w do
+			local calci = ((i/w) * 360) / 360
+			local r, g, b = hsvToRGB(calci, CurrSaturation, CurrBrightness)
+			love.graphics.setColor(r, g, b)
+			love.graphics.rectangle("fill", i, 0, (w/360), 32)
+		end
+	love.graphics.setCanvas()
 	
 	return rgbcanvas
 end
@@ -22,14 +22,14 @@ local function makeBrightnessCanvas()
 		brightnesscanvas = love.graphics.newCanvas(w, 32)
 	end
 
-		love.graphics.setCanvas(brightnesscanvas)
-			for i = 0, w do
-				local calci = ((i/w) * 360) / 360
-				local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, calci)
-				love.graphics.setColor(r, g, b)
-				love.graphics.rectangle("fill", i, 0, (w/360), 32)
-			end
-		love.graphics.setCanvas()
+	love.graphics.setCanvas(brightnesscanvas)
+		for i = 0, w do
+			local calci = ((i/w) * 360) / 360
+			local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, calci)
+			love.graphics.setColor(r, g, b)
+			love.graphics.rectangle("fill", i, 0, (w/360), 32)
+		end
+	love.graphics.setCanvas()
 	
 	return brightnesscanvas
 end
@@ -40,14 +40,14 @@ local function makeSaturationCanvas()
 		saturationcanvas = love.graphics.newCanvas(w, 32)
 	end
 		
-		love.graphics.setCanvas(saturationcanvas)
-			for i = 0, w do
-				local calci = ((i/w) * 360) / 360
-				local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, calci, CurrBrightness)
-				love.graphics.setColor(r, g, b)
-				love.graphics.rectangle("fill", i, 0, (w/360), 32)
-			end
-		love.graphics.setCanvas()
+	love.graphics.setCanvas(saturationcanvas)
+		for i = 0, w do
+			local calci = ((i/w) * 360) / 360
+			local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, calci, CurrBrightness)
+			love.graphics.setColor(r, g, b)
+			love.graphics.rectangle("fill", i, 0, (w/360), 32)
+		end
+	love.graphics.setCanvas()
 
 	return saturationcanvas
 end
