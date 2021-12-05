@@ -52,7 +52,7 @@ local function makeSaturationCanvas()
 	return saturationcanvas
 end
 
-function renderBorder()
+function renderIcon()
 	local w, h = love.graphics.getDimensions()
 
 	local ioffx = DrawOffset[1]
@@ -66,6 +66,10 @@ function renderBorder()
 	love.graphics.setColor(0.1, 0.1, 0.15, 0.5)
 	love.graphics.rectangle("fill", (ioffx + 256) - ((ImageScale / 2) * 512), (ioffy + 256) - ((ImageScale / 2) * 512), 512 * ImageScale, 512 * ImageScale)
 
+end
+
+function renderBorder()
+	local w, h = love.graphics.getDimensions()
 	local offx = ColourOffset[1]
 	local offy = ColourOffset[2]
 

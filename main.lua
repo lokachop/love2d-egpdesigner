@@ -38,10 +38,13 @@ end
 
 function love.draw() -- draw
 	local w, h = love.graphics.getDimensions()
-	renderBorder()
-	egplib.renderEGPObjects()
 
+	renderIcon()
+
+	egplib.renderEGPObjects()
 	lsglil.renderGUI()
+	renderBorder()
+
 	renderNotifications(0, 0)
 	egplib.renderDrawingData(w * 0.85, 0)
 end

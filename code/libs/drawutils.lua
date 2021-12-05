@@ -25,20 +25,27 @@ function screenToTranslated(vec)
 
 
 	local transform = love.math.newTransform()
-	transform:translate(w / 2, h / 2)
-	transform:scale(ImageScale)
-	transform:translate(-w / 2, -h / 2)
-	transform:translate(DrawOffset[1], DrawOffset[2])
+	transform:translate(w / 4, h / 3.15)
+	transform:scale(math.abs(ImageScale))
+	transform:translate(-w / 4, -h / 3.15)
+	transform:translate(DrawOffset[1] / ImageScale, DrawOffset[2] / ImageScale)
 	local fx, fy = transform:transformPoint(vec[1], vec[2])
 	return {fx, fy}
 end
 
+
 function screenToTranslatedMouse(vec)
-	local fx = vec[1] - (DrawOffset[1])
-	local fy = vec[2] - DrawOffset[2]
+	local w, h = love.graphics.getDimensions()
+	local rtmx = (vec[1] - (w / 2)) / w
+	local rtmy = (vec[2] - (h / 2)) / h
+
+
+	local fx = ((vec[1] - DrawOffset[1]) / ImageScale) + (rtmx * ImageScale)
+	local fy = ((vec[2] - DrawOffset[2]) / ImageScale) + (rtmy * ImageScale)
 
 	return {fx, fy}
 end
+
 
 
 
@@ -49,6 +56,7 @@ function renderEGPRectangle(dmode, x, y, w, h, ang)
 	love.graphics.rectangle(dmode, 0 - w / 2, 0 - h / 2, w, h)
 	love.graphics.pop()
 end
+
 
 function renderEGPPolyFull(polydata)
 	local w, h = love.graphics.getDimensions()

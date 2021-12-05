@@ -195,7 +195,7 @@ function egplib.renderDrawingData(x, y)
 end
 
 
-local function polyDrawRemovePoint(x, y)
+local function polyDrawRemovePoint()
 	if not (egplib.getPolyCount(egplib.CurrDrawData.id) == 0) then
 		egplib.removeLastPolyPoint(egplib.CurrDrawData.id)
 	else
@@ -206,9 +206,10 @@ end
 
 local function polyDrawAddPoint(x, y)
 	local fpos = screenToTranslatedMouse({x, y})
-	addNotification(fpos[1], 4)
+	addNotification("x: "..x.." y: "..y, 4)
+	addNotification("fx: "..tostring(fpos[1]).." fy: "..tostring(fpos[2]), 4)
 
-	egplib.addPolyPoint(egplib.CurrDrawData.id, fpos)
+	egplib.addPolyPoint(egplib.CurrDrawData.id, {fpos[1], fpos[2]})
 	addNotification("add point", 2)
 end
 
@@ -270,15 +271,16 @@ end
 
 
 function egplib.handleDrawing(x, y, button, istouch, presses)
+	local mx, my = love.mouse.getPosition()
 	if egplib.DrawingPoly then
 		if  button == 1 then
 			if egplib.existsPolyDraw(egplib.CurrDrawData.id) then
-				polyDrawAddPoint(x, y)
+				polyDrawAddPoint(mx, my)
 			else
-				polyDrawInit(x, y)
+				polyDrawInit(mx, my)
 			end
 		elseif button == 2 then
-			polyDrawRemovePoint(x, y)
+			polyDrawRemovePoint()
 		end
 	else
 		if button == 1 then
@@ -313,13 +315,6 @@ function egplib.handleZooming(x, y)
 	mx = mx * ImageScale
 	my = my * ImageScale
 
-	if y > 0 then
-		DrawOffset[1] = DrawOffset[1] - (mx / 16)
-		DrawOffset[2] = DrawOffset[2] - (my / 16)
-	else
-		DrawOffset[1] = DrawOffset[1] + (mx / 16)
-		DrawOffset[2] = DrawOffset[2] + (my / 16)
-	end
 	addNotification("ImageScale now "..tostring(ImageScale), 2)
 end
 
@@ -386,10 +381,18 @@ local function exportPoly(poly, currID)
 	end
 
 	local tris = love.math.triangulate(tabltotriangulate)
+	code = code.."\n    \n    local ColourOBJ"..currID.." = vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b..")"
 
 	for k, v in pairs(tris) do
-		code = code.."\n    EGP:egpTriangle(IDOff + "..tostring(currID + IDAddCount)..", vec2("..(v[1] - offx)..", "..(v[2] - offy).."), vec2("..(v[3] - offx)..", "..(v[4] - offy).."), vec2("..(v[5] - offx)..", "..(v[6] - offy).."))"
-		code = code.."\n    EGP:egpColor(IDOff + "..tostring(currID + IDAddCount)..", vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b.."))"
+		local c1 = math.floor(v[1] - offx)
+		local c2 = math.floor(v[2] - offy)
+		local c3 = math.floor(v[3] - offx)
+		local c4 = math.floor(v[4] - offy)
+		local c5 = math.floor(v[5] - offx)
+		local c6 = math.floor(v[6] - offy)
+
+		code = code.."\n    EGP:egpTriangle(IDOff + "..tostring(currID + IDAddCount)..", vec2("..c1..", "..c2.."), vec2("..c3..", "..c4.."), vec2("..c5..", "..c6.."))"
+		code = code.."\n    EGP:egpColor(IDOff + "..tostring(currID + IDAddCount)..", ColourOBJ"..currID..")"
 		IDAddCount = IDAddCount + 1
 	end
 	return code, IDAddCount
