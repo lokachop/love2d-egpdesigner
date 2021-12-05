@@ -214,7 +214,6 @@ end
 local function polyDrawInit(x, y)
 	local fpos = screenToTranslatedMouse({x, y})
 
-	--egplib.CurrDrawData.id = #egplib.egpObjects + 1
 	egplib.addEGPPoly(egplib.CurrDrawData.id, fpos)
 	egplib.CurrDrawData.hasPoly = true
 	addNotification("poly nil, made", 2)
@@ -267,7 +266,7 @@ local function setSaturationOffX(x)
 	b = math.floor(b * 255)
 	polyDrawCurrObjSetCol(r, g, b)
 end
---CurrBrightness
+
 
 function egplib.handleDrawing(x, y, button, istouch, presses)
 	if egplib.DrawingPoly then

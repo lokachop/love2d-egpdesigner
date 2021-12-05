@@ -22,8 +22,6 @@ end
 
 function screenToTranslated(vec)
 	local w, h = love.graphics.getDimensions()
-	--w = w - (ImageScale * 256)
-	--h = h - (ImageScale * 256)
 
 
 	local transform = love.math.newTransform()
@@ -62,11 +60,7 @@ function renderEGPPolyFull(polydata)
 		tabltorender[#tabltorender + 1] = (fpos[1])
 		tabltorender[#tabltorender + 1] = (fpos[2])
 	end
-
-	--for k, v in pairs(tabltorender) do
-		--addNotification("["..tostring(k).."]: "..tostring(v), 2)
-	--end
-
+	
 	local tris = love.math.triangulate(tabltorender)
 
 	for k, v in pairs(tris) do
