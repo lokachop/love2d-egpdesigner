@@ -1,3 +1,5 @@
+this requires love2d (https://love2d.org/)
+
 replace background.png (in egpdesigner/res folder) to change the background while drawing (has to be 512 x 512)
 this tool was made by lokachop
 contact Lokachop#5862 if you have any issues, enjoy!
