@@ -158,14 +158,46 @@ function egplib.renderEGPObjects()
 	if egplib.existsPolyDraw(egplib.CurrDrawData.id) then
 		for k, v in pairs(egplib.getPolyData(egplib.CurrDrawData.id)) do
 			love.graphics.setColor(1, 0, 0)
-			renderEGPRectangle("fill", v[1], v[2], 2, 2, 0)
+			local offset = screenToTranslated({v[1], v[2]})
+			renderEGPRectangle("fill", offset[1], offset[2], 2, 2, 0)
 		end
 	end
 end
 
+function egplib.renderDrawingData(x, y)
+	local objcount = 0
+	for k, v in pairs(egplib.egpObjects) do
+		objcount = objcount + 1
+	end
+	love.graphics.setColor(0, 255, 0)
+	love.graphics.print("Objects: "..tostring(objcount), x, y)
+
+	tricount = 0
+	for k, v in pairs(egplib.egpObjects) do
+		local tritabl = {}
+		if v.type == "poly" then
+			for k, v in pairs(v.pdata) do
+				tritabl[#tritabl + 1] = v[1]
+				tritabl[#tritabl + 1] = v[2]
+			end
+
+			local ran, tris = pcall(love.math.triangulate, tritabl)
+			if ran then
+				for k, v in pairs(tris) do
+					tricount = tricount + 1
+				end
+			end
+		end
+	end
+
+	love.graphics.print("EGPObjects: "..tostring(tricount), x, y + 16)
+
+end
+
+
 local function polyDrawRemovePoint(x, y)
 	if not (egplib.getPolyCount(egplib.CurrDrawData.id) == 0) then
-		egplib.removeLastPolyPoint(egplib.CurrDrawData.id, {x, y})
+		egplib.removeLastPolyPoint(egplib.CurrDrawData.id)
 	else
 		egplib.removeObject(egplib.CurrDrawData.id)
 		return
@@ -173,13 +205,17 @@ local function polyDrawRemovePoint(x, y)
 end
 
 local function polyDrawAddPoint(x, y)
-	egplib.addPolyPoint(egplib.CurrDrawData.id, {x, y})
+	local fpos = screenToTranslatedMouse({x, y})
+
+	egplib.addPolyPoint(egplib.CurrDrawData.id, fpos)
 	addNotification("add point", 2)
 end
 
 local function polyDrawInit(x, y)
-	egplib.CurrDrawData.id = #egplib.egpObjects + 1
-	egplib.addEGPPoly(egplib.CurrDrawData.id, {x, y})
+	local fpos = screenToTranslatedMouse({x, y})
+
+	--egplib.CurrDrawData.id = #egplib.egpObjects + 1
+	egplib.addEGPPoly(egplib.CurrDrawData.id, fpos)
 	egplib.CurrDrawData.hasPoly = true
 	addNotification("poly nil, made", 2)
 end
@@ -191,8 +227,11 @@ local function polyDrawCurrObjSetCol(r, g, b)
 end
 
 local function setColorOffX(x)
-	local xcalc = ((x/512) * 360) / 360
+	local w, h = love.graphics.getDimensions()
+
+	local xcalc = ((x/w) * 360) / 360
 	egplib.CurrDrawData.colx = xcalc
+
 
 	local r, g, b = hsvToRGB(egplib.CurrDrawData.colx , CurrSaturation, CurrBrightness)
 	r = math.floor(r * 255)
@@ -204,7 +243,9 @@ local function setColorOffX(x)
 end
 
 local function setBrightnessOffX(x)
-	local xcalc = ((x/512) * 360) / 360
+	local w, h = love.graphics.getDimensions()
+
+	local xcalc = ((x/w) * 360) / 360
 	CurrBrightness = xcalc
 
 	local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, CurrBrightness)
@@ -215,7 +256,9 @@ local function setBrightnessOffX(x)
 end
 
 local function setSaturationOffX(x)
-	local xcalc = ((x/512) * 360) / 360
+	local w, h = love.graphics.getDimensions()
+
+	local xcalc = ((x/w) * 360) / 360
 	CurrSaturation = xcalc
 
 	local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, CurrBrightness)
@@ -239,16 +282,47 @@ function egplib.handleDrawing(x, y, button, istouch, presses)
 		end
 	else
 		if button == 1 then
-			if math.inrange(y, 641, 641 + 32) then
+			local offy = ColourOffset[2]
+			if math.inrange(y, 641 + offy, (641 + 32) + offy) then
 				setColorOffX(x)
-			elseif math.inrange(y, 641 + 32, 641 + 64) then
+			elseif math.inrange(y, (641 + 32) + offy, (641 + 64) + offy) then
 				setBrightnessOffX(x)
-			elseif math.inrange(y, 641 + 64, 641 + 92) then
+			elseif math.inrange(y, (641 + 64) + offy, (641 + 92) + offy) then
 				setSaturationOffX(x)
 			end
 		end
 	end
 end
+
+function egplib.handleDragging(x, y, dx, dy)
+	if love.mouse.isDown(3) then
+		DrawOffset[1] = DrawOffset[1] + (dx / 1)
+		DrawOffset[2] = DrawOffset[2] + (dy / 1)
+	end
+
+end
+
+
+function egplib.handleZooming(x, y)
+	ImageScale = ImageScale + (y / 16)
+	local w, h = love.graphics.getDimensions()
+	local mx, my = love.mouse.getPosition()
+	mx = mx - w / 2
+	my = my - h / 2
+
+	mx = mx * ImageScale
+	my = my * ImageScale
+
+	if y > 0 then
+		DrawOffset[1] = DrawOffset[1] - (mx / 16)
+		DrawOffset[2] = DrawOffset[2] - (my / 16)
+	else
+		DrawOffset[1] = DrawOffset[1] + (mx / 16)
+		DrawOffset[2] = DrawOffset[2] + (my / 16)
+	end
+	addNotification("ImageScale now "..tostring(ImageScale), 2)
+end
+
 
 function egplib.toggleDrawing()
 	if egplib.DrawingPoly == false then
@@ -300,8 +374,11 @@ end
 local function exportPoly(poly, currID)
 	local code = ""
 	local IDAddCount = 0
-
 	local tabltotriangulate = {}
+
+	local offx = DrawOffset[1]
+	local offy = DrawOffset[2]
+
 	for k, v in pairs(egplib.getPolyData(poly.id)) do
 		tabltotriangulate[#tabltotriangulate + 1] = v[1]
 		tabltotriangulate[#tabltotriangulate + 1] = v[2]
@@ -310,7 +387,7 @@ local function exportPoly(poly, currID)
 	local tris = love.math.triangulate(tabltotriangulate)
 
 	for k, v in pairs(tris) do
-		code = code.."\n	EGP:egpTriangle("..tostring(currID + IDAddCount)..", vec2("..v[1]..", "..v[2].."), vec2("..v[3]..", "..v[4].."), vec2("..v[5]..", "..v[6].."))"
+		code = code.."\n	EGP:egpTriangle("..tostring(currID + IDAddCount)..", vec2("..(v[1] - offx)..", "..(v[2] - offy).."), vec2("..(v[3] - offx)..", "..(v[4] - offy).."), vec2("..(v[5] - offx)..", "..(v[6] - offy).."))"
 		code = code.."\n	EGP:egpColor("..tostring(currID + IDAddCount)..", vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b.."))"
 		IDAddCount = IDAddCount + 1
 	end
@@ -328,7 +405,7 @@ function egplib.exportEGPData()
 	if egplib.exporterSettings.useFunction then
 		code = code.."\nfunction drawExported()\n{"
 	else
-		code = code.."\nif(first()|dupefinished())\n{"
+		code = code.."\nif(first()|dupefinished())\n{\nEGP:egpClear()\n"
 	end
 
 	for k, v in pairs(egplib.egpObjects) do

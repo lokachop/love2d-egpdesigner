@@ -20,6 +20,30 @@ function hsvToRGB(h, s, v)
   return r, g, b
 end
 
+function screenToTranslated(vec)
+	local w, h = love.graphics.getDimensions()
+	--w = w - (ImageScale * 256)
+	--h = h - (ImageScale * 256)
+
+
+	local transform = love.math.newTransform()
+	transform:translate(w / 2, h / 2)
+	transform:scale(ImageScale)
+	transform:translate(-w / 2, -h / 2)
+	transform:translate(DrawOffset[1] - 256, DrawOffset[2])
+	local fx, fy = transform:transformPoint(vec[1], vec[2])
+	return {fx, fy}
+end
+
+function screenToTranslatedMouse(vec)
+	local fx = vec[1] - (DrawOffset[1] - 256)
+	local fy = vec[2] - DrawOffset[2]
+
+	return {fx, fy}
+end
+
+
+
 function renderEGPRectangle(dmode, x, y, w, h, ang)
 	love.graphics.push()
 	love.graphics.translate(x, y)
@@ -29,12 +53,14 @@ function renderEGPRectangle(dmode, x, y, w, h, ang)
 end
 
 function renderEGPPolyFull(polydata)
-
+	local w, h = love.graphics.getDimensions()
 	local tabltorender = {}
 
 	for k, v in pairs(polydata) do 
-		tabltorender[#tabltorender + 1] = v[1]
-		tabltorender[#tabltorender + 1] = v[2]
+		local fpos = screenToTranslated(v)
+
+		tabltorender[#tabltorender + 1] = (fpos[1])
+		tabltorender[#tabltorender + 1] = (fpos[2])
 	end
 
 	--for k, v in pairs(tabltorender) do
