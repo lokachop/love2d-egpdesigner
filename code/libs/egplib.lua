@@ -363,9 +363,9 @@ end
 
 local function exportBox(v, currID)
 	local code = ""
-	code = code.."\n	EGP:egpBox("..currID..", vec2("..v.x..", "..v.y.."), vec2("..v.w..", "..v.h.."))"
-	code = code.."\n	EGP:egpColor("..currID..", vec("..v.col.r..", "..v.col.g..", "..v.col.b.."))"
-	code = code.."\n	EGP:egpAngle("..currID..", "..v.ang..")\n"
+	code = code.."\n    EGP:egpBox("..currID..", vec2("..v.x..", "..v.y.."), vec2("..v.w..", "..v.h.."))"
+	code = code.."\n    EGP:egpColor("..currID..", vec("..v.col.r..", "..v.col.g..", "..v.col.b.."))"
+	code = code.."\n    EGP:egpAngle("..currID..", "..v.ang..")\n"
 
 	return code, 0
 end
@@ -386,8 +386,8 @@ local function exportPoly(poly, currID)
 	local tris = love.math.triangulate(tabltotriangulate)
 
 	for k, v in pairs(tris) do
-		code = code.."\n	EGP:egpTriangle("..tostring(currID + IDAddCount)..", vec2("..(v[1] - offx)..", "..(v[2] - offy).."), vec2("..(v[3] - offx)..", "..(v[4] - offy).."), vec2("..(v[5] - offx)..", "..(v[6] - offy).."))"
-		code = code.."\n	EGP:egpColor("..tostring(currID + IDAddCount)..", vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b.."))"
+		code = code.."\n    EGP:egpTriangle(IDOff + "..tostring(currID + IDAddCount)..", vec2("..(v[1] - offx)..", "..(v[2] - offy).."), vec2("..(v[3] - offx)..", "..(v[4] - offy).."), vec2("..(v[5] - offx)..", "..(v[6] - offy).."))"
+		code = code.."\n    EGP:egpColor(IDOff + "..tostring(currID + IDAddCount)..", vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b.."))"
 		IDAddCount = IDAddCount + 1
 	end
 	return code, IDAddCount
@@ -404,7 +404,7 @@ function egplib.exportEGPData()
 	if egplib.exporterSettings.useFunction then
 		code = code.."\nfunction drawExported()\n{"
 	else
-		code = code.."\nif(first()|dupefinished())\n{\nEGP:egpClear()\n"
+		code = code.."\nif(first()|dupefinished())\n{\n    EGP:egpClear()\n    local IDOff = 0"
 	end
 
 	for k, v in pairs(egplib.egpObjects) do
@@ -423,7 +423,7 @@ function egplib.exportEGPData()
 	if egplib.exporterSettings.useFunction then
 		code = code.."\n}"
 	else
-		code = code.."\n}\n\nif(~EGP)\n{\n	reset()\n}\n\n#exported with lokachop's EGPDesignHelper, contact Lokachop#5862"
+		code = code.."\n}\n\nif(~EGP)\n{\n    reset()\n}\n\n#exported with lokachop's EGPDesignHelper, contact Lokachop#5862"
 	end
 
 	addNotification("saving file!", 4)
