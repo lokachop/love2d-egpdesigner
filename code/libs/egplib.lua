@@ -377,6 +377,11 @@ local function exportPoly(poly, currID)
 
 	end
 
+	if #tabltotriangulate < 6 then -- its x, y stuff, so we have to compare against 6
+		code = code.."\n\n    #This object had < 3 points, skipped!"
+		addNotification("Tried to export < 3 point polygon, skipping!", 2)
+		return code, IDAddCount
+	end
 	local tris = love.math.triangulate(tabltotriangulate)
 	code = code.."\n    \n    local ColourOBJ"..currID.." = vec("..poly.col.r..", "..poly.col.g..", "..poly.col.b..")"
 
