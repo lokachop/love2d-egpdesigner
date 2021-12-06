@@ -439,4 +439,5 @@ function egplib.exportEGPData()
 	f:write(code)
 	f:close()
 
+	love.system.openURL("file://"..love.filesystem.getSaveDirectory())
 end
