@@ -206,9 +206,6 @@ end
 
 local function polyDrawAddPoint(x, y)
 	local fpos = screenToTranslatedMouse({x, y})
-	addNotification("x: "..x.." y: "..y, 4)
-	addNotification("fx: "..tostring(fpos[1]).." fy: "..tostring(fpos[2]), 4)
-
 	egplib.addPolyPoint(egplib.CurrDrawData.id, {fpos[1], fpos[2]})
 	addNotification("add point", 2)
 end
