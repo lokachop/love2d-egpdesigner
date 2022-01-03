@@ -37,7 +37,7 @@ end
 
 
 function love.draw() -- draw
-	local w, h = love.graphics.getDimensions()
+	local w, _ = love.graphics.getDimensions()
 
 	renderIcon()
 

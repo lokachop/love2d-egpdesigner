@@ -227,7 +227,7 @@ local function polyDrawCurrObjSetCol(r, g, b)
 end
 
 local function setColorOffX(x)
-    local w, h = love.graphics.getDimensions()
+    local w, _ = love.graphics.getDimensions()
     local xcalc = ((x / w) * 360) / 360
     egplib.CurrDrawData.colx = xcalc
     local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, CurrBrightness)
@@ -239,7 +239,7 @@ local function setColorOffX(x)
 end
 
 local function setBrightnessOffX(x)
-    local w, h = love.graphics.getDimensions()
+    local w, _ = love.graphics.getDimensions()
     local xcalc = ((x / w) * 360) / 360
     CurrBrightness = xcalc
     local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, CurrBrightness)
@@ -250,7 +250,7 @@ local function setBrightnessOffX(x)
 end
 
 local function setSaturationOffX(x)
-    local w, h = love.graphics.getDimensions()
+    local w, _ = love.graphics.getDimensions()
     local xcalc = ((x / w) * 360) / 360
     CurrSaturation = xcalc
     local r, g, b = hsvToRGB(egplib.CurrDrawData.colx, CurrSaturation, CurrBrightness)

@@ -1,81 +1,74 @@
 function hsvToRGB(h, s, v)
-  local r, g, b
+    local r, g, b
+    local i = math.floor(h * 6)
+    local f = h * 6 - i
+    local p = v * (1 - s)
+    local q = v * (1 - f * s)
+    local t = v * (1 - (1 - f) * s)
+    i = i % 6
 
-  local i = math.floor(h * 6);
-  local f = h * 6 - i;
-  local p = v * (1 - s);
-  local q = v * (1 - f * s);
-  local t = v * (1 - (1 - f) * s);
+    if i == 0 then
+        r, g, b = v, t, p
+    elseif i == 1 then
+        r, g, b = q, v, p
+    elseif i == 2 then
+        r, g, b = p, v, t
+    elseif i == 3 then
+        r, g, b = p, q, v
+    elseif i == 4 then
+        r, g, b = t, p, v
+    elseif i == 5 then
+        r, g, b = v, p, q
+    end
 
-  i = i % 6
-
-  if i == 0 then r, g, b = v, t, p
-  elseif i == 1 then r, g, b = q, v, p
-  elseif i == 2 then r, g, b = p, v, t
-  elseif i == 3 then r, g, b = p, q, v
-  elseif i == 4 then r, g, b = t, p, v
-  elseif i == 5 then r, g, b = v, p, q
-  end
-
-  return r, g, b
+    return r, g, b
 end
 
 function screenToTranslated(vec)
-	local w, h = love.graphics.getDimensions()
+    local w, h = love.graphics.getDimensions()
+    local transform = love.math.newTransform()
+    transform:translate(w / 4, h / 3.15)
+    transform:scale(math.abs(ImageScale))
+    transform:translate(-w / 4, -h / 3.15)
+    transform:translate(DrawOffset[1] / ImageScale, DrawOffset[2] / ImageScale)
+    local fx, fy = transform:transformPoint(vec[1], vec[2])
 
-
-	local transform = love.math.newTransform()
-	transform:translate(w / 4, h / 3.15)
-	transform:scale(math.abs(ImageScale))
-	transform:translate(-w / 4, -h / 3.15)
-	transform:translate(DrawOffset[1] / ImageScale, DrawOffset[2] / ImageScale)
-	local fx, fy = transform:transformPoint(vec[1], vec[2])
-	return {fx, fy}
+    return {fx, fy}
 end
-
 
 function screenToTranslatedMouse(vec)
-	local w, h = love.graphics.getDimensions()
-	local rtmx = (vec[1] - (w / 2)) / w
-	local rtmy = (vec[2] - (h / 2)) / h
+    local w, h = love.graphics.getDimensions()
+    local rtmx = (vec[1] - (w / 2)) / w
+    local rtmy = (vec[2] - (h / 2)) / h
+    local fx = ((vec[1] - DrawOffset[1]) / ImageScale) + (rtmx * ImageScale)
+    local fy = ((vec[2] - DrawOffset[2]) / ImageScale) + (rtmy * ImageScale)
 
-
-	local fx = ((vec[1] - DrawOffset[1]) / ImageScale) + (rtmx * ImageScale)
-	local fy = ((vec[2] - DrawOffset[2]) / ImageScale) + (rtmy * ImageScale)
-
-	return {fx, fy}
+    return {fx, fy}
 end
-
-
-
 
 function renderEGPRectangle(dmode, x, y, w, h, ang)
-	love.graphics.push()
-	love.graphics.translate(x, y)
-	love.graphics.rotate(ang)
-	love.graphics.rectangle(dmode, 0 - w / 2, 0 - h / 2, w, h)
-	love.graphics.pop()
+    love.graphics.push()
+    love.graphics.translate(x, y)
+    love.graphics.rotate(ang)
+    love.graphics.rectangle(dmode, 0 - w / 2, 0 - h / 2, w, h)
+    love.graphics.pop()
 end
 
-
 function renderEGPPolyFull(polydata)
-	local w, h = love.graphics.getDimensions()
-	local tabltorender = {}
+    local tabltorender = {}
 
-	for k, v in pairs(polydata) do 
-		local fpos = screenToTranslated(v)
+    for k, v in pairs(polydata) do
+        local fpos = screenToTranslated(v)
+        tabltorender[#tabltorender + 1] = fpos[1]
+        tabltorender[#tabltorender + 1] = fpos[2]
+    end
 
-		tabltorender[#tabltorender + 1] = (fpos[1])
-		tabltorender[#tabltorender + 1] = (fpos[2])
-	end
+    local tris = love.math.triangulate(tabltorender)
 
-	local tris = love.math.triangulate(tabltorender)
-
-	for k, v in pairs(tris) do
-		love.graphics.polygon("fill", v)
-	end
+    for k, v in pairs(tris) do
+        love.graphics.polygon("fill", v)
+    end
 end
 
 function renderEGPLine(sx, sy, ex, ey)
-
 end
