@@ -15,7 +15,7 @@ function love.load() -- called on start
 	background = love.graphics.newImage("res/background.png")
 	backgroundQuad = love.graphics.newQuad(0, 0, 512, 512, 512, 512)
 
-	
+
 	DoTransparency = false
 	drawCanvas = love.graphics.newCanvas(512, 512)
 

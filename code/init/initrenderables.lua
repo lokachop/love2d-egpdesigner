@@ -12,7 +12,7 @@ local function makeHSV2RGBCanvas()
 			love.graphics.rectangle("fill", i, 0, (w/360), 32)
 		end
 	love.graphics.setCanvas()
-	
+
 	return rgbcanvas
 end
 
@@ -30,7 +30,7 @@ local function makeBrightnessCanvas()
 			love.graphics.rectangle("fill", i, 0, (w/360), 32)
 		end
 	love.graphics.setCanvas()
-	
+
 	return brightnesscanvas
 end
 
@@ -39,7 +39,7 @@ local function makeSaturationCanvas()
 	if (saturationcanvas == nil) then
 		saturationcanvas = love.graphics.newCanvas(w, 32)
 	end
-		
+
 	love.graphics.setCanvas(saturationcanvas)
 		for i = 0, w do
 			local calci = ((i/w) * 360) / 360
@@ -53,8 +53,6 @@ local function makeSaturationCanvas()
 end
 
 function renderIcon()
-	local w, h = love.graphics.getDimensions()
-
 	local ioffx = DrawOffset[1]
 	local ioffy = DrawOffset[2]
 
@@ -111,10 +109,23 @@ function initEGPDrawerGUI()
 	lsglil.addToGuiElements(buttonexport)
 
 
+	local buttonExportGPU, name = lsglil.makeButton("buttonExportGPU", function()
+		egplib.exportEGPDataAsGPU()
+	end)
+	lsglil.setPos(buttonExportGPU, 0 + offx, 514 + 34 + offy)
+	lsglil.setSize(buttonExportGPU, 127, 32)
+	lsglil.setText(buttonExportGPU, "Export as GPU")
+	lsglil.setRender(buttonExportGPU, "fill")
+	lsglil.setColor(buttonExportGPU, {0, 0.15, 0.3})
+	lsglil.setHoverColor(buttonExportGPU, {0, 0.5, 1})
+
+	lsglil.addToGuiElements(buttonExportGPU)
+
+
 	local buttonTransparency, name = lsglil.makeButton("buttonTransparency", function()
 		egplib.toggleTransparency()
 	end)
-	lsglil.setPos(buttonTransparency, 0 + offx, 514 + 34 + offy)
+	lsglil.setPos(buttonTransparency, 0 + offx, 514 + 68 + offy)
 	lsglil.setSize(buttonTransparency, 127, 32)
 	lsglil.setText(buttonTransparency, "Transparency")
 	lsglil.setRender(buttonTransparency, "fill")
